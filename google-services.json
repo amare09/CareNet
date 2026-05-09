@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "886189939711",
+    "project_id": "carenet-37cf8",
+    "storage_bucket": "carenet-37cf8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886189939711:android:4aa4cb64f288f9814765ca",
+        "android_client_info": {
+          "package_name": "com.cherry.carenet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCax2Dm77dtx5FRNi0kBkTdTxVj322IF7A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
