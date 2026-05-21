@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(libs.androidx.navigation.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,7 +61,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.compose.material:material-icons-extended")
-//firebase
+    implementation("com.google.accompanist:accompanist-permissions:0.37.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+    //firebase
 
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
 

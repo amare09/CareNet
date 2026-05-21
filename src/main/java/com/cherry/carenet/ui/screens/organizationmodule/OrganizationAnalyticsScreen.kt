@@ -7,6 +7,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -18,6 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.cherry.carenet.ui.theme.SoftPowderBlue
+import com.cherry.carenet.utilis.AdminUtils
 import com.cherry.carenet.viewmodel.OrganizationViewModel
 
 @Composable
@@ -27,7 +29,23 @@ fun OrganizationAnalyticsScreen(
 ) {
 
     val stats = viewModel.stats.value
+    if (!AdminUtils.isAdmin()) {
 
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Text(
+                text = "Access Denied",
+                color = Color.Red,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        return
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()

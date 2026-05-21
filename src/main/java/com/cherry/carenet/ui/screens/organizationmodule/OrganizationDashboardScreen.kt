@@ -34,13 +34,19 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.cherry.carenet.navigation.ROUTE_ORGANIZATION_REQUEST_DETAILS
 import com.cherry.carenet.ui.theme.SoftPowderBlue
+import com.cherry.carenet.utilis.AdminUtils
 import com.cherry.carenet.viewmodel.OrganizationViewModel
 
 @Composable
 fun StatCard(
     title: String,
     value: String
+
+
+
 ) {
+
+
 
     Card(
         modifier = Modifier
@@ -151,7 +157,23 @@ fun OrganizationDashboardScreen(
 ) {
 
     val stats = viewModel.stats.value
+    if (!AdminUtils.isAdmin()) {
 
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Text(
+                text = "Admins Only",
+                color = Color.Red,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        return
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()

@@ -42,7 +42,9 @@ class ProfileViewModel : ViewModel() {
     // ✅ SAVE CHANGES
     fun saveProfile(
         name: String,
-        bio: String
+        bio: String,
+        address:String,
+        profileImage: String
     ) {
 
         val current =
@@ -51,11 +53,16 @@ class ProfileViewModel : ViewModel() {
         val updatedUser =
             current.copy(
                 name = name,
-                bio = bio
+                bio = bio,
+                address = address,
+                profileImage = profileImage
             )
 
         repo.updateUser(updatedUser)
 
         userState.value = updatedUser
+    }
+    fun refresh() {
+        loadUser()
     }
 }

@@ -47,6 +47,9 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.rememberAsyncImagePainter
@@ -54,177 +57,201 @@ import java.io.File
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cherry.carenet.viewmodel.ProfileViewModel
-
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+//import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.core.content.ContextCompat
 @Composable
 fun EditProfileScreen(navController: NavController) {
 
     val viewModel: ProfileViewModel = viewModel()
-
     val user = viewModel.userState.value
+
     var name by remember(user.name) { mutableStateOf(user.name) }
-    var email by remember (user.email){ mutableStateOf(user.email) }
+    var email by remember(user.email) { mutableStateOf(user.email) }
     var address by remember(user.address) { mutableStateOf(user.address) }
-    var bio by remember (user.bio){ mutableStateOf(user.bio) }
+    var bio by remember(user.bio) { mutableStateOf(user.bio) }
+
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+
     val context = LocalContext.current
+
     val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        ActivityResultContracts.GetContent()
     ) { uri ->
         imageUri = uri
     }
+
     val photoFile = remember {
         File(context.cacheDir, "profile.jpg")
     }
+
     val photoUri = remember {
         FileProvider.getUriForFile(
             context,
             "${context.packageName}.provider",
             photoFile
         )
-
     }
 
     val cameraLauncher = rememberLauncherForActivityResult(
-
-        contract = ActivityResultContracts.TakePicture()
+        ActivityResultContracts.TakePicture()
     ) { success ->
         if (success) {
             imageUri = photoUri
         }
     }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF7F3ED))
-    ) {
+//launcher
+    val cameraPermissionLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
 
-        // 🌊 1. GRADIENT HEADER (TOP SECTION)
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            SoftPowderBlue,
-                            SoftPowderBlue.copy(alpha = 0.7f)
-                        )
-                    )
-                )
-        )
-
-        // 👤 2. PROFILE HERO (OVERLAPPING HEADER)
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 60.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(90.dp)
-                    .background(Color.White, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-
-                if (imageUri != null) {
-                    Image(
-                        painter = rememberAsyncImagePainter(imageUri),
-                        contentDescription = "Profile Image",
-                        modifier = Modifier.size(90.dp)
-                    )
-                } else {
-
-                    Text(
-                        text = name.firstOrNull()?.uppercase()?.toString() ?: "?",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = SoftPowderBlue
-                    )
-
-
-                }//else
+            if (isGranted) {
+                cameraLauncher.launch(photoUri)
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(onClick = { galleryLauncher.launch("image/*") }) {
-                Text("Gallery")
-            }
-
-
-            Button(onClick = { cameraLauncher.launch(photoUri) }) {
-                Text("Camera")
-            }
-
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                text = name,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-
-            Text(
-                text = "⭐ Trusted Member",
-                fontSize = 14.sp,
-                color = Color.White.copy(alpha = 0.8f)
-            )
         }
 
-        // 🧾 3. FLOATING EDIT CARD
-        Card(
+    val galleryPermissionLauncher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+
+            if (isGranted) {
+                galleryLauncher.launch("image/*")
+            }
+        }
+//launcher
+
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        SoftPowderBlue.copy(alpha = 0.3f),
+                        Color(0xFFF7F3ED)
+                    )
+                )
+            )
+            .padding(16.dp)
+    ) {
+
+        Text(
+            text = "Edit Profile",
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // PROFILE IMAGE CARD
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .align(Alignment.BottomCenter)
-                .offset(y = (-40).dp),
-            shape = RoundedCornerShape(20.dp),
-            elevation = CardDefaults.cardElevation(10.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+                .size(110.dp)
+                .align(Alignment.CenterHorizontally)
+                .background(Color.White, CircleShape),
+            contentAlignment = Alignment.Center
         ) {
+            if (imageUri != null) {
 
-            Column(modifier = Modifier.padding(16.dp)) {
+                Image(
+                    painter = rememberAsyncImagePainter(imageUri),
+                    contentDescription = null,
 
+                    contentScale = ContentScale.Crop,
+
+                    modifier = Modifier
+                        .size(110.dp)
+                        .clip(CircleShape)
+                )
+
+            }
+
+
+            else {
                 Text(
-                    text = "Edit Profile",
-                    fontSize = 18.sp,
+                    text = name.firstOrNull()?.uppercase()?.toString() ?: "?",
+                    fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = SoftPowderBlue
                 )
+            }
+        }
 
-                Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button(onClick = {val permission =
+                if (android.os.Build.VERSION.SDK_INT >= 33)
+                    Manifest.permission.READ_MEDIA_IMAGES
+                else
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+
+                if (ContextCompat.checkSelfPermission(context, permission)
+                    == PackageManager.PERMISSION_GRANTED
+                ) {
+                    galleryLauncher.launch("image/*")
+                } else {
+                    galleryPermissionLauncher.launch(permission)
+                }}) {
+                Text("Gallery")
+            }
+            Button(onClick = {
+
+                    val permissionGranted = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED
+
+                    if (permissionGranted) {
+                        cameraLauncher.launch(photoUri)
+                    } else {
+                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+
+            }) {
+                Text("Camera")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // INPUT CARD
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(Color.White),
+            elevation = CardDefaults.cardElevation(8.dp)
+        ) {
+
+            Column(modifier = Modifier.padding(16.dp)) {
 
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
                     label = { Text("Full Name") },
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(Icons.Default.Person, null)
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = SoftPowderBlue,
-                        unfocusedBorderColor = SoftPowderBlue
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 OutlinedTextField(
                     value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(Icons.Default.Email, null)
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = SoftPowderBlue,
-                        unfocusedBorderColor = SoftPowderBlue
-                    )
+                    onValueChange = {},
+                    enabled = false,
+                    label = { Text("Email (cannot change)") },
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -233,49 +260,36 @@ fun EditProfileScreen(navController: NavController) {
                     value = address,
                     onValueChange = { address = it },
                     label = { Text("Address") },
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(Icons.Default.LocationOn, null)
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = SoftPowderBlue,
-                        unfocusedBorderColor = SoftPowderBlue
-                    )
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-
                 OutlinedTextField(
                     value = bio,
                     onValueChange = { bio = it },
-                    label = { Text("Your Bio") },
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = {
-                        Icon(Icons.Default.List, null)
-                    },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = SoftPowderBlue,
-                        unfocusedBorderColor = SoftPowderBlue
-                    )
+                    label = { Text("Bio") },
+                    modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = {
+
+                        val image = imageUri?.toString() ?: user.profileImage
+
                         viewModel.saveProfile(
-                            name=name,
-                            bio=bio,
-                            //address=address
+                            name = name,
+                            bio = bio,
+                            address = address,
+                            profileImage = image
                         )
 
+                        navController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = SoftPowderBlue
-                    )
+                    colors = ButtonDefaults.buttonColors(SoftPowderBlue)
                 ) {
                     Text("Save Changes", color = Color.White)
                 }
@@ -283,6 +297,7 @@ fun EditProfileScreen(navController: NavController) {
         }
     }
 }
+
     @Preview(showBackground = true)
 @Composable
 fun EditProfileScreenPreview(){

@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,20 +45,17 @@ fun SplashScreen(navController: NavController){
         verticalArrangement = Arrangement.Center
 
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.community),
             contentDescription = "Splashimage",
+            contentScale = ContentScale.Fit,
 
             modifier = Modifier
-                .size(300.dp)
-                .clip(CircleShape)
-                .border(
-                    width = 3.dp,
-                    color = SoftPowderBlue,
-                    shape = CircleShape
-                )
+                .size(220.dp)
+                .clip(RoundedCornerShape(28.dp))
         )
+
+
     }
 }
 

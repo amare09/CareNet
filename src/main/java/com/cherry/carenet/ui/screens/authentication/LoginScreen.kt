@@ -61,7 +61,6 @@ fun LoginScreen(navController: NavController,
 
     val authViewModel: AuthViewModel= viewModel()
 
-
 //VARIABLES
     //search bar starts
     var name by remember { mutableStateOf( "") }

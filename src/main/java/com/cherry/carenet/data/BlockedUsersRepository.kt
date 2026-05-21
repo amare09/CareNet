@@ -14,14 +14,24 @@ class BlockedUsersRepository {
 
 
 
+    //SAFETY KEYS!!
+    private fun safeKey(value: String): String {
+        return value
+            .replace(".", "_")
+            .replace("#", "_")
+            .replace("$", "_")
+            .replace("[", "_")
+            .replace("]", "_")
+    }
+
     // ✅ BLOCK USER
     fun blockUser(
         currentUserId: String,
         blockedUserId: String
     ) {
 
-        db.child(currentUserId)
-            .child(blockedUserId)
+        db.child(safeKey(currentUserId))
+            .child(safeKey(blockedUserId))
             .setValue(true)
     }
 
@@ -33,8 +43,8 @@ class BlockedUsersRepository {
         blockedUserId: String
     ) {
 
-        db.child(currentUserId)
-            .child(blockedUserId)
+        db.child(safeKey(currentUserId))
+            .child(safeKey(blockedUserId))
             .removeValue()
     }
 
@@ -47,8 +57,8 @@ class BlockedUsersRepository {
         onResult: (Boolean) -> Unit
     ) {
 
-        db.child(currentUserId)
-            .child(otherUserId)
+        db.child(safeKey(currentUserId))
+            .child(safeKey(otherUserId))
             .get()
             .addOnSuccessListener {
 
@@ -64,7 +74,7 @@ class BlockedUsersRepository {
         onResult: (List<String>) -> Unit
     ) {
 
-        db.child(currentUserId)
+        db.child(safeKey(currentUserId))
             .addValueEventListener(
                 object : ValueEventListener {
 

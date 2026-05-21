@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -102,8 +103,16 @@ fun RoleSelectionScreen(navController: NavController){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF7F3ED))
-            .padding(16.dp)
+
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        SoftPowderBlue,
+                        Color.White
+                    )
+                )
+            )
+           .padding(16.dp)
     ) {
 
         Spacer(modifier = Modifier.height(40.dp))
@@ -132,15 +141,6 @@ fun RoleSelectionScreen(navController: NavController){
             icon = Icons.Default.Person,
             selected = selectedRole == "user",
             onClick = { selectedRole = "user" }
-        )
-
-        // 🤝 HELPER ROLE
-        RoleCard(
-            title = "Helper",
-            description = "Offer help to people nearby",
-            icon = Icons.Default.Person,
-            selected = selectedRole == "helper",
-            onClick = { selectedRole = "helper" }
         )
 
         // 🏢 ORGANIZATION (OPTIONAL)

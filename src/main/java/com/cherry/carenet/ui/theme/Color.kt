@@ -24,3 +24,5 @@ val WarmCream = Color(0xFFF7F3ED)
 val SoftPeach = Color(0xFFF4A896)
 
 val WarmGrey  = Color(0xFF5F5F5F)
+val color  = Color(0xFFF7F8FA)
+val colour  = Color(0xFFEAF2FF)

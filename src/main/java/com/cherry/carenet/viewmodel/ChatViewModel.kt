@@ -27,9 +27,8 @@ class ChatViewModel : ViewModel() {
         repo.listenMessages(roomId) { list ->
 
             // 🔥 filter blocked users BEFORE showing messages
-            val filtered = list.filter { msg ->
-                msg.sender != currentUserId
-            }
+            val filtered = list
+
 
             messages.clear()
             messages.addAll(filtered)
@@ -45,7 +44,9 @@ class ChatViewModel : ViewModel() {
     ) {
 
         val msg = ChatMessage(
-            sender = currentUserName,
+            senderId = currentUserId,
+            senderName=currentUserName,
+            receiverId=receiverId,
             message = text
         )
 

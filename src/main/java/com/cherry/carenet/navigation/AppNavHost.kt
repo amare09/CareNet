@@ -1,6 +1,7 @@
 package com.cherry.carenet.navigation
 
 //import HelpDetailsScreen
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -28,12 +29,15 @@ import androidx.navigation.navArgument
 import com.cherry.carenet.ui.screens.communication.ChatListScreen
 import com.cherry.carenet.ui.screens.maincorenavigation.ProfileScreen
 import com.cherry.carenet.ui.screens.notifications.NotificationsScreen
-import com.cherry.carenet.ui.screens.organization.EmergencyMonitorScreen
+//import com.cherry.carenet.ui.screens.organization.EmergencyMonitorScreen
 import com.cherry.carenet.ui.screens.organization.OrganizationAnalyticsScreen
+import com.cherry.carenet.ui.screens.organization.OrganizationDashboardScreen
+import com.cherry.carenet.ui.screens.organizationmodule.EmergencyMonitorScreen
 import com.cherry.carenet.ui.screens.organizationmodule.OrganizationRequestDetailsScreen
 import com.cherry.carenet.ui.screens.requestmanagement.ReceiveRequestScreen
 import com.cherry.carenet.ui.screens.settingsandsupport.SettingsScreen
 import com.cherry.carenet.ui.screens.trustandidentity.BlockedUsersScreen
+import com.cherry.carenet.ui.screens.trustandidentity.EditProfileScreen
 
 //import com.cherry.carenet.ui.screens.organization.OrganizationRequestDetailsScreen
 
@@ -115,7 +119,7 @@ fun AppNavHost(
             ChatScreen(
                 navController = navController,
                 userName = userName,
-                roomId = roomId
+                roomId = roomId,
             )
         }
 
@@ -188,9 +192,19 @@ fun AppNavHost(
             SettingsScreen(navController)
         }
 
+        composable(ROUTE_EDIT_PROFILE) {
+            EditProfileScreen(navController)
+        }
 
+        composable(ROUTE_ADMIN_DASHBOARD) {
 
+            OrganizationDashboardScreen(navController)
+        }
 
+        composable(ROUTE_ADMIN_ANALYTICS) {
+
+            OrganizationAnalyticsScreen(navController)
+        }
 
 
 
